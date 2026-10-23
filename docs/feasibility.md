@@ -52,7 +52,7 @@ The gap: no mature project combines Chromium (so Chrome extensions and site comp
 3. **Thin C++ patches** only where the web UI needs a hook into the browser: removing the horizontal tab strip, the sidebar container, split view layout, the quick window, Space and profile wiring.
 4. **Data** in the Chromium profile (Spaces, pinned tabs, folders as a profile-level store), so import, backup and future sync work on one format.
 5. **Updates** through Sparkle on macOS and GitHub Releases, signed builds only.
-6. **AI features** off by default, through the provider the user configures.
+6. **No AI features.** The product is the power-user workflow Arc users chose it for.
 
 Rebasing a small patch series onto a new Chromium every four weeks is routine work. Keeping a private embedding framework in step, as Arc did, is not.
 
@@ -75,7 +75,6 @@ Rebasing a small patch series onto a new Chromium every four weeks is routine wo
 | Apple Developer Program | Yearly | 99 USD |
 | SignPath Foundation (R2) | Free for open source | 0 |
 | GitHub public repository, Actions on our own runner, Releases, Pages | Free | 0 |
-| AI features | Paid by each user through their own provider key | 0 |
 | Sync server (R3) | Runs on existing servers | 0 extra |
 
 ## Effort and timeline
@@ -86,7 +85,7 @@ Assumes AI coding agents write most of the code, reviewed by the team, with the 
 |---|---|---|
 | 0. Build chain | Fetch, patch and build Chromium stable on the Mac runner; signed, notarised, auto-updating "hello" build | 2 weeks |
 | R1. macOS beta | Sidebar, pinned and today tabs with auto-archive, folders, Spaces with themes and profiles, command bar, split view, quick window, import from Arc and other browsers, Chrome Web Store | 6 to 8 weeks after step 0 |
-| R2. Parity | Peek, link routing, picture in picture, media controls, site styles, content blocker, capture, AI features, Windows | 8 to 10 weeks after R1 |
+| R2. Parity | Peek, link routing, picture in picture, media controls, site styles, content blocker, capture, Windows | 8 to 10 weeks after R1 |
 | R3. Extras | Encrypted sync, notes, canvas, Linux, AppleScript | Later |
 
 A beta before 22 December 2026 is possible only if the Mac build machine is running within one week and R1 is cut to sidebar, Spaces, pinned tabs and import from Arc. The realistic R1 date is mid-January 2027. Arc users who leave in December will move to Zen, Stedding or Dia first. The import from Arc must also read Arc data exported before its shutdown, so they can still switch later.
