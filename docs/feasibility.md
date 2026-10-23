@@ -60,7 +60,7 @@ Rebasing a small patch series onto a new Chromium every four weeks is routine wo
 
 | Need | Why | Option |
 |---|---|---|
-| macOS build machine | Chromium for macOS builds only on a Mac. A clean build needs about 100 GB of disk, at least 32 GB of memory, and several hours. GitHub's free macOS runners are too small. The team laptop must not be used (16 GB). | A dedicated Mac mini, M4 Pro, 48 GB, 1 TB, connected as a self-hosted GitHub runner |
+| macOS build machine | Chromium for macOS builds only on a Mac. The source checkout alone takes tens of gigabytes and a clean build takes hours, so the machine needs a large disk and plenty of memory. GitHub's free macOS runners are too small, and the team laptop (16 GB) must stay free for its owner. | A dedicated Mac mini, M4 Pro, 48 GB, 1 TB, connected as a self-hosted GitHub runner |
 | Apple Developer Program | Signing and notarisation, without which macOS blocks the download | Annual membership |
 | Windows build (R2) | Windows builds | Cross-build from Linux, or a Windows host, decided at R2 |
 | Windows code signing (R2) | SmartScreen warnings otherwise | SignPath Foundation, free for open-source projects |
