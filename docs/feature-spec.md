@@ -64,15 +64,9 @@ Each feature is described as behaviour a user can observe. Sources: using Arc, A
 | Capture | Select an area of a page and copy or save it as an image. | R2 |
 | Canvas | A free board mixing captures, links and text. | R3 |
 
-## AI features
+## No AI features
 
-All AI calls go through the user's chosen provider. The browser never sends page content without an explicit action.
-
-| Feature | Behaviour | Release |
-|---|---|---|
-| Tidy tab titles | Long titles are shortened in the sidebar. | R2 |
-| Ask the page | A question about the open page, answered from its text. | R2 |
-| Link preview summary | Hovering a link with a modifier shows a short summary of the target. | R3 |
+Arc's users came for its power-user workflow, not for AI, and its AI successor Dia lost them. This browser ships no AI features and never sends page content to a model.
 
 ## Data and accounts
 
