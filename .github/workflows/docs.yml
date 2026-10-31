@@ -1,0 +1,40 @@
+name: Docs
+
+# Gives documentation pull requests a check: this repository has no other workflow.
+on:
+  pull_request:
+    paths:
+      - "**/*.md"
+      - "docs/**"
+      - ".claude/**"
+      - ".github/workflows/docs.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  docs:
+    runs-on: [self-hosted, linux, x64, ci]
+    timeout-minutes: 5
+    container:
+      image: node:24.15.0-bookworm@sha256:f22d6a1f082c02f292e86929b5b0442ac2e5eaf438a5dea9b1566601c3e05940
+    env:
+      npm_config_cache: /tmp/ci/npm
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      # Only the Markdown files changed by the PR, with a pinned Prettier and its default style.
+      - name: Prettier check on changed Markdown
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git diff --name-only -z --diff-filter=ACMR "origin/$BASE_REF" HEAD -- '*.md' > /tmp/changed-md
+          if [ ! -s /tmp/changed-md ]; then echo "No changed Markdown file."; exit 0; fi
+          xargs -0 npx --yes prettier@3.9.6 --no-config --no-error-on-unmatched-pattern --check < /tmp/changed-md
