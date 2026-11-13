@@ -1,55 +1,53 @@
 # Payrolless Browser
 
-An open-source browser built from scratch to recreate the Arc browser workflow (vertical sidebar tabs, Spaces, pinned/today tabs, command bar, split view) under MPL-2.0, following Arc's shutdown announced for 22 December 2026. Targeted at power users needing Arc's UX on top of Chromium without any AI features.
+An open-source browser built from scratch to recreate the Arc browser workflow (vertical sidebar tabs, Spaces, pinned/today tabs, command bar, split view) under MPL-2.0, following Arc's shutdown announced for 22 December 2026. Power users get Arc's UX on Chromium with no AI features.
 
-## Status & Layout
+## Stack (planned)
 
-Current status: Feasibility and specification phase. No browser source code, package manifests, or build scripts yet.
+Chromium stable with minimal rebasable patches; UI in Chromium web UI (TypeScript, HTML, CSS); thin C++ hooks. Updates via GitHub Releases (all platforms) and Sparkle on macOS. Details in `docs/feasibility.md`.
 
-- `docs/clean-room.md`: Clean-room implementation rules and boundary guidelines
-- `docs/feasibility.md`: Feasibility study, architecture choices, costs, and timeline
-- `docs/feature-spec.md`: User-observable feature specifications across R1, R2, and R3 releases
-- `LICENSE`: Mozilla Public License 2.0 (MPL-2.0)
-- `README.md`: Project summary and mission statement
+## Layout
 
-## Architecture (Planned)
+Feasibility and specification phase. No browser source, package manifests, or build scripts yet.
 
-Derived from `docs/feasibility.md`:
+- `docs/clean-room.md`: clean-room implementation rules and boundary guidelines
+- `docs/feasibility.md`: feasibility study, architecture choices, costs, and timeline
+- `docs/feature-spec.md`: observable feature specifications for R1, R2, and R3
+- `LICENSE` (MPL-2.0), `README.md`
+- `.github/workflows/docs.yml` (Markdown check on pull requests)
 
-- Engine: Chromium stable pinned version, maintained via a minimal patch series rebased every 4 weeks.
-- User Interface: Chromium internal web UI stack (TypeScript, HTML, CSS) to share code across platforms.
-- Core hooks: Minimal C++ patches for window management, sidebar integration, and profile/Space routing.
-- Updates: Sparkle framework on macOS; GitHub Releases.
-- Target platforms: macOS 13+ on Apple silicon (R1), Windows 10/11 x64 (R2), Linux x64 (R3).
+## Absolute rules
+
+- Clean-room (`docs/clean-room.md`): never copy, disassemble, decompile, translate or paraphrase Arc source code or binaries; never commit or extract anything from an Arc installer; never ship or redraw Arc proprietary assets (icons, logos, fonts, sounds, copy); never use "Arc" or "The Browser Company" as product name, domain, or feature branding; specify observable behaviour in `docs/feature-spec.md` before implementation.
+- Zero AI (`docs/feature-spec.md`): no AI features, summarizers, or LLM integrations; page content is never transmitted to any AI model.
+- Licensing (`LICENSE`, `README.md`): MPL-2.0 for project files; Chromium components keep their BSD-style licence.
+- The browser must work fully without account creation or login (`docs/feature-spec.md`).
+- Chromium changes stay rebasable patches, not a permanent fork (`docs/feasibility.md`).
+
+## Git and release flow
+
+Pull requests target `dev`. Promotion: `dev` → `rec` → `main`; `main` (the default branch) is production.
 
 ## Commands
 
-No build system, package manifests, or CI workflows exist in the repository yet.
-Commands to build, test, lint, or run will be defined once Chromium patch tooling and web UI packages are introduced.
+No install, build, test, lint, or run targets yet; only the Markdown check below.
 
-## Domain Rules & Invariants
+Docs check (job `docs` in `.github/workflows/docs.yml`). Set `BASE_REF` to the PR base branch (usually `dev`):
 
-- Clean-room rules (`docs/clean-room.md`):
-  - Never copy, disassemble, or translate Arc source code or binaries.
-  - Never commit or extract Arc proprietary assets (icons, fonts, sounds, copy).
-  - Never use "Arc" or "The Browser Company" as product or feature branding.
-  - Features must be specified as observable behavior in `docs/feature-spec.md` prior to implementation.
-- Zero AI (`docs/feature-spec.md`, git commit `1f1a7fe` on 2026-10-23):
-  - No AI features, summarizers, or LLM integrations. Page content is never transmitted to any AI model.
-- Licensing (`LICENSE`, `README.md`):
-  - All project files licensed under MPL-2.0. Underlying Chromium components retain their BSD-style license.
-- Release milestones (`docs/feature-spec.md`):
-  - R1: Core workflow (sidebar, Spaces, pinned tabs, today tabs auto-archive, command bar, split view, quick window, Arc import).
-  - R2: Parity (peek, link routing, picture-in-picture, site styles, ad/tracker blocker, Windows support).
-  - R3: Extras (end-to-end encrypted sync, notes, canvas, Linux support, AppleScript).
+```sh
+set -e
+: "${BASE_REF:?set BASE_REF to the PR base (e.g. dev)}"
+git fetch origin "$BASE_REF"
+CHANGED_MD=$(mktemp)
+trap 'rm -f "$CHANGED_MD"' EXIT
+git diff --name-only -z --diff-filter=ACMR "origin/$BASE_REF" HEAD -- '*.md' > "$CHANGED_MD"
+if [ ! -s "$CHANGED_MD" ]; then echo "No changed Markdown file."; exit 0; fi
+xargs -0 npx --yes prettier@3.9.6 --no-config --no-error-on-unmatched-pattern --check < "$CHANGED_MD"
+```
 
-## Gotchas
+## Detailed docs
 
-- Chromium rebase cost: Never maintain a permanent fork; keep changes isolated as rebasable patches to absorb 4-week upstream Chromium security updates (`docs/feasibility.md`).
-- macOS build requirements: Clean macOS Chromium builds need a dedicated Mac runner with a large disk and plenty of memory: GitHub's free macOS runners are too small and the team laptop (16 GB) must stay free for its owner (`docs/feasibility.md`).
-- Account requirement: The browser must remain fully functional without requiring user account creation or login (`docs/feature-spec.md`).
-
-## Environments & Git Workflow
-
-- Branches: `dev` (integration), `rec` (pre-production), `main` (production).
-- Infrastructure and runner configurations are managed outside the repository in DevOps documentation.
+- `docs/agents/architecture.md`: read before engine, UI stack, platform, or update choices.
+- `docs/agents/domain-rules.md`: read before features, licensing, branding, or release scope.
+- `docs/agents/gotchas.md`: read before Chromium rebases, macOS builds, or account assumptions.
+- `docs/agents/git-workflow.md`: read before branch or external infrastructure assumptions.
