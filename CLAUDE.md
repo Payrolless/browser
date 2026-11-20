@@ -1,5 +1,7 @@
 # Payrolless Browser
 
+Read docs/project-status.md first; update it (and docs/app-store-review.md) in every PR that changes state.
+
 An open-source browser built from scratch to recreate the Arc browser workflow (vertical sidebar tabs, Spaces, pinned/today tabs, command bar, split view) under MPL-2.0, following Arc's shutdown announced for 22 December 2026. Power users get Arc's UX on Chromium with no AI features.
 
 ## Stack (planned)
